@@ -7,7 +7,7 @@ DEPENDS = "virtual/kernel iptables"
 inherit autotools module-base pkgconfig
 
 SRC_URI = " \
-          https://fossies.org/linux/privat/${BPN}-${PV}.tar.xz \
+          ${SOURCEFORGE_MIRROR}/project/${PN}/Xtables-addons/${PN}-${PV}.tar.xz \
           file://100-add-rtsp-conntrack.patch \
           file://200-add-lua-packetscript.patch \
           file://201-fix-lua-packetscript.patch \
