@@ -36,7 +36,8 @@ do_install_append() {
     install -Dm 0644 ${BF}/rom/note ${D}/rom/note
     install -Dm 0544 ${WORKDIR}/banner.failsafe ${D}${sysconfdir}/banner.failsafe
 
-    install -Dm 0644 -t ${D}${base_libdir}/preinit ${BF}/lib/preinit/*
+    install -dm 0755 ${D}${base_libdir}/preinit
+    install -m 0644 -t ${D}${base_libdir}/preinit ${BF}/lib/preinit/*
     install -Dm 0644 ${WORKDIR}/10_sysinfo ${D}${base_libdir}/preinit/10_sysinfo
     install -Dm 0644 ${WORKDIR}/00_preinit.conf ${D}${base_libdir}/preinit/00_preinit.conf
 
@@ -61,8 +62,9 @@ do_install_append() {
     install -Dm 0755 ${BF}/etc/init.d/boot ${D}${sysconfdir}/init.d/boot
 
     # Dev manager / hotplug / coldplug
+    install -dm 0755 ${D}${sysconfdir}/rc.button
     install -Dm 0644 ${PD}/hotplug.json ${D}${sysconfdir}/hotplug.json
-    install -Dm 0755 -t ${D}${sysconfdir}/rc.button ${BF}/etc/rc.button/*
+    install -m 0755 -t ${D}${sysconfdir}/rc.button ${BF}/etc/rc.button/*
     install -Dm 0755 ${BF}/sbin/hotplug-call ${D}${base_sbindir}/hotplug-call
     cp -dR --preserve=mode,links ${BF}/etc/hotplug.d ${D}${sysconfdir}
 
@@ -73,13 +75,13 @@ do_install_append() {
           ${D}${base_sbindir}/hotplug-call
 
     # Make sure things are where they are expected to be
-    install -dm 0755 ${D}/sbin ${D}/lib
+    install -dm 0755 ${D}/sbin
     ln -s /usr/sbin/procd ${D}/sbin/procd
     ln -s /usr/sbin/init ${D}/sbin/init
     ln -s /usr/sbin/askfirst ${D}/sbin/askfirst
     ln -s /usr/sbin/udevtrigger ${D}/sbin/udevtrigger
     mv ${D}${libdir}/libsetlbf.so ${D}${base_libdir}/libsetlbf.so
-    rmdir ${D}/usr/lib
+    rmdir ${D}${libdir}
 }
 
 RDEPENDS_${PN} += "\
