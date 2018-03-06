@@ -9,7 +9,7 @@ SECTION = "base"
 
 DEPENDS = "libtool libmnl"
 
-SRC_URI = "http://ipset.netfilter.org/${PN}-${PV}.tar.bz2"
+SRC_URI = "http://ipset.netfilter.org/${BPN}-${PV}.tar.bz2"
 
 SRC_URI[md5sum] = "8831b8f01458bf2abacc222884195a62"
 SRC_URI[sha256sum] = "3071fc283f00a6472b5b352ef57f9825c9face70dda5b0d8715f8d43d0e995d0"
