@@ -27,18 +27,13 @@ SRCREV_openwrt = "${OPENWRT_SRCREV}"
 
 OECMAKE_C_FLAGS += "-I${STAGING_INCDIR}/libnl3 -Wno-error=cpp"
 
-do_configure_prepend () {
-    # replace hardcoded '/lib/' with '${base_libdir}/'
-    grep -rnl "/lib/" ${S}/openwrt/package/network/config/netifd/ | xargs sed -i "s:/lib/:${base_libdir}/:g"
-}
-
 do_install_append() {
-    install -d ${D}${base_libdir}/netifd/
+    install -d ${D}/lib/netifd/
     # cp because recursive
     cp -dR --preserve=mode,links ${S}/openwrt/package/network/config/netifd/files/* ${D}/
-    cp -dR --preserve=mode,links ${S}/scripts/* ${D}${base_libdir}/netifd/
+    cp -dR --preserve=mode,links ${S}/scripts/* ${D}/lib/netifd/
 
-    install -Dm 0644 ${S}/openwrt/package/base-files/files/lib/functions/network.sh ${D}${base_libdir}/functions/network.sh
+    install -Dm 0644 ${S}/openwrt/package/base-files/files/lib/functions/network.sh ${D}/lib/functions/network.sh
     install -Dm 0755 ${S}/openwrt/package/base-files/files/etc/uci-defaults/12_network-generate-ula ${D}${sysconfdir}/uci-defaults/12_network-generate-ula
 
     ${@bb.utils.contains('COMBINED_FEATURES', 'wifi', 'install -Dm 0755 ${S}/openwrt/package/base-files/files/sbin/wifi ${D}${base_sbindir}/wifi', '', d)}
@@ -56,10 +51,6 @@ do_install_append() {
     install -dm 0755 ${D}/etc/modules.d ${D}/etc/modules-load.d
     echo "bridge" >${D}/etc/modules.d/30-bridge
     echo "bridge" >${D}/etc/modules-load.d/bridge.conf
-
-    # Remove duplicate files under /lib/
-    rm -rf ${D}/lib/
-
 }
 
 ALTERNATIVE_${PN} = "ifup ifdown default.script"
@@ -72,13 +63,13 @@ ALTERNATIVE_LINK_NAME[default.script] = "/usr/share/udhcpc/default.script"
 
 FILES_${PN} += "\
                /usr/share/udhcpc/default.script* \
-               ${base_libdir}/netifd/dhcp.script \
-               ${base_libdir}/netifd/utils.sh \
-               ${base_libdir}/netifd/netifd-wireless.sh \
-               ${base_libdir}/netifd/netifd-proto.sh \
-               ${base_libdir}/netifd/proto/dhcp.sh \
-               ${base_libdir}/network/config.sh \
-               ${base_libdir}/functions/network.sh \
+               /lib/netifd/dhcp.script \
+               /lib/netifd/utils.sh \
+               /lib/netifd/netifd-wireless.sh \
+               /lib/netifd/netifd-proto.sh \
+               /lib/netifd/proto/dhcp.sh \
+               /lib/network/config.sh \
+               /lib/functions/network.sh \
                ${@bb.utils.contains('IMAGE_INSTALL', 'base-files ', '', '${sysconfdir}/config/network', d)} \
                ${@bb.utils.contains('COMBINED_FEATURES', 'wifi', '/sbin/wifi', '', d)} \
                "
